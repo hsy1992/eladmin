@@ -16,6 +16,7 @@
 package me.zhengjie.modules.store.service.impl;
 
 import me.zhengjie.modules.store.domain.TsStore;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -71,7 +74,8 @@ public class TsStoreServiceImpl implements TsStoreService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public TsStoreDto create(TsStore resources) {
+    public TsStoreDto create(@Validated TsStore resources) {
+        resources.setIsDel(false);
         return tsStoreMapper.toDto(tsStoreRepository.save(resources));
     }
 

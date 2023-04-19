@@ -16,6 +16,7 @@
 package me.zhengjie.modules.store.rest;
 
 import me.zhengjie.annotation.Log;
+import me.zhengjie.base.BaseEntity;
 import me.zhengjie.modules.store.domain.TsStore;
 import me.zhengjie.modules.store.service.TsStoreService;
 import me.zhengjie.modules.store.service.dto.TsStoreQueryCriteria;

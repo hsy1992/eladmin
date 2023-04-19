@@ -19,6 +19,13 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
@@ -33,26 +40,31 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name="ts_store")
+@EntityListeners(AuditingEntityListener.class)
 public class TsStore implements Serializable {
 
     @Column(name = "`is_del`")
     @ApiModelProperty(value = "是否删除;0 删除 1未删除")
     private Boolean isDel;
 
-    @Column(name = "`created_by`")
-    @ApiModelProperty(value = "创建人")
+    @CreatedBy
+    @Column(name = "`created_by`", updatable = false)
+    @ApiModelProperty(value = "创建人", hidden = true)
     private String createdBy;
 
-    @Column(name = "`created_time`")
-    @ApiModelProperty(value = "创建时间")
+    @CreationTimestamp
+    @Column(name = "`created_time`", updatable = false)
+    @ApiModelProperty(value = "创建时间", hidden = true)
     private Timestamp createdTime;
 
-    @Column(name = "`updated_by`")
-    @ApiModelProperty(value = "更新人")
+    @LastModifiedBy
+    @Column(name = "`updated_by`", updatable = true)
+    @ApiModelProperty(value = "更新人", hidden = true)
     private String updatedBy;
 
-    @Column(name = "`updated_time`")
-    @ApiModelProperty(value = "更新时间")
+    @LastModifiedDate
+    @Column(name = "`updated_time`", updatable = true)
+    @ApiModelProperty(value = "更新时间", hidden = true)
     private Timestamp updatedTime;
 
     @Id
@@ -65,18 +77,22 @@ public class TsStore implements Serializable {
     @ApiModelProperty(value = "门店Code")
     private String code;
 
+    @NotBlank(message = "密码为空")
     @Column(name = "`name`")
     @ApiModelProperty(value = "门店名称")
     private String name;
 
+    @NotBlank
     @Column(name = "`phone`")
     @ApiModelProperty(value = "门店电话")
     private String phone;
 
+    @NotBlank
     @Column(name = "`address`")
     @ApiModelProperty(value = "门店地址省市区")
     private String address;
 
+    @NotBlank
     @Column(name = "`address_details`")
     @ApiModelProperty(value = "门店详情")
     private String addressDetails;
