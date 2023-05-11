@@ -73,7 +73,7 @@ public class TsProductBaseInfoDto implements Serializable {
     private BigDecimal buyPrice;
 
     /** 销售价 */
-    private String salesPrice;
+    private BigDecimal salesPrice;
 
     /** 计价方式 */
     private String valuationMethod;

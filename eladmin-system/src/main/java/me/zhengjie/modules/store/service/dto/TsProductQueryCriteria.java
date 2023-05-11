@@ -16,6 +16,8 @@
 package me.zhengjie.modules.store.service.dto;
 
 import lombok.Data;
+
+import java.sql.Timestamp;
 import java.util.List;
 import me.zhengjie.annotation.Query;
 
@@ -26,4 +28,9 @@ import me.zhengjie.annotation.Query;
 **/
 @Data
 public class TsProductQueryCriteria{
+
+    private Boolean isDel = false;
+
+    private Long deptId;
+
 }

@@ -74,8 +74,6 @@ public class TsStoreReplyServiceImpl implements TsStoreReplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsStoreReplyDto create(TsStoreReply resources) {
-        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
-        resources.setId(snowflake.nextId()); 
         return tsStoreReplyMapper.toDto(tsStoreReplyRepository.save(resources));
     }
 

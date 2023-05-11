@@ -17,6 +17,7 @@ package me.zhengjie.modules.system.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseEntity;

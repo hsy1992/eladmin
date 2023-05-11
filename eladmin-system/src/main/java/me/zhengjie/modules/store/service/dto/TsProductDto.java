@@ -83,4 +83,7 @@ public class TsProductDto implements Serializable {
 
     /** 店铺id */
     private Long storeId;
+
+    /** 分类名称 */
+    private String cateName;
 }

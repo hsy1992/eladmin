@@ -19,6 +19,8 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
@@ -36,21 +38,10 @@ import java.io.Serializable;
 @Table(name="ts_product_base_info")
 public class TsProductBaseInfo implements Serializable {
 
-    @Column(name = "`created_by`")
-    @ApiModelProperty(value = "创建人")
-    private String createdBy;
-
+    @CreationTimestamp
     @Column(name = "`created_time`")
     @ApiModelProperty(value = "创建时间")
     private Timestamp createdTime;
-
-    @Column(name = "`updated_by`")
-    @ApiModelProperty(value = "更新人")
-    private String updatedBy;
-
-    @Column(name = "`updated_time`")
-    @ApiModelProperty(value = "更新时间")
-    private Timestamp updatedTime;
 
     @Column(name = "`is_del`")
     @ApiModelProperty(value = "isDel")
@@ -60,6 +51,7 @@ public class TsProductBaseInfo implements Serializable {
     @ApiModelProperty(value = "商品条码(必填)")
     private String code;
 
+    @NotBlank
     @Column(name = "`name`")
     @ApiModelProperty(value = "商品名称(必填)")
     private String name;
@@ -76,6 +68,7 @@ public class TsProductBaseInfo implements Serializable {
     @ApiModelProperty(value = "库存单位(必填)")
     private String size;
 
+    @NotBlank
     @Column(name = "`cate_name`")
     @ApiModelProperty(value = "商品类别名称(必填)")
     private String cateName;
@@ -94,13 +87,14 @@ public class TsProductBaseInfo implements Serializable {
 
     @Column(name = "`sales_price`")
     @ApiModelProperty(value = "销售价")
-    private String salesPrice;
+    private BigDecimal salesPrice;
 
     @Column(name = "`valuation_method`")
     @ApiModelProperty(value = "计价方式")
     private String valuationMethod;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
     @ApiModelProperty(value = "id")
     private Long id;

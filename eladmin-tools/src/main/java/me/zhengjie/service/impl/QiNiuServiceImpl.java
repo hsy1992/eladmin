@@ -20,6 +20,7 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
+import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.storage.model.FileInfo;
@@ -101,7 +102,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
         // 构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
+        Configuration cfg = new Configuration(Region.autoRegion());
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         String upToken = auth.uploadToken(qiniuConfig.getBucket());

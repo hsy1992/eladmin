@@ -87,7 +87,6 @@ public class TsStore implements Serializable {
     @ApiModelProperty(value = "门店电话")
     private String phone;
 
-    @NotBlank
     @Column(name = "`address`")
     @ApiModelProperty(value = "门店地址省市区")
     private String address;
@@ -97,10 +96,12 @@ public class TsStore implements Serializable {
     @ApiModelProperty(value = "门店详情")
     private String addressDetails;
 
+    @NotBlank
     @Column(name = "`latitude`")
     @ApiModelProperty(value = "纬度")
     private String latitude;
 
+    @NotBlank
     @Column(name = "`longitude`")
     @ApiModelProperty(value = "经度")
     private String longitude;
@@ -136,6 +137,10 @@ public class TsStore implements Serializable {
     @Column(name = "`advertisement`")
     @ApiModelProperty(value = "广告")
     private String advertisement;
+
+    @Column(name = "`dept_id`")
+    @ApiModelProperty(value = "部门id")
+    private Long deptId;
 
     public void copy(TsStore source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

@@ -51,6 +51,14 @@ public class TsProductClassifyController {
         tsProductClassifyService.download(tsProductClassifyService.queryAll(criteria), response);
     }
 
+    @Log("查询全部分类")
+    @ApiOperation("查询全部分类")
+    @GetMapping(value = "/list")
+    @PreAuthorize("@el.check('tsProductClassify:list')")
+    public ResponseEntity<Object> getProductClassifyList(TsProductClassifyQueryCriteria criteria) {
+        return new ResponseEntity<>(tsProductClassifyService.queryAll(criteria), HttpStatus.OK);
+    }
+
     @GetMapping
     @Log("查询分类配置")
     @ApiOperation("查询分类配置")

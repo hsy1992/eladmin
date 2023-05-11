@@ -19,6 +19,8 @@ import me.zhengjie.modules.store.domain.TsProductBaseInfo;
 import me.zhengjie.modules.store.service.dto.TsProductBaseInfoDto;
 import me.zhengjie.modules.store.service.dto.TsProductBaseInfoQueryCriteria;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Map;
 import java.util.List;
 import java.io.IOException;
@@ -80,4 +82,5 @@ public interface TsProductBaseInfoService {
     * @throws IOException /
     */
     void download(List<TsProductBaseInfoDto> all, HttpServletResponse response) throws IOException;
+
 }

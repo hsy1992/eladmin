@@ -1,21 +1,25 @@
 /*
-*  Copyright 2019-2020 Zheng Jie
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*  http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-*/
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.store.service.impl;
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.druid.sql.visitor.functions.If;
 import me.zhengjie.modules.store.domain.TsProductBaseInfo;
+import me.zhengjie.tools.ProductCodeUtil;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -32,19 +36,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
-* @website https://eladmin.vip
-* @description 服务实现
-* @author endless
-* @date 2023-04-13
-**/
+ * @author endless
+ * @website https://eladmin.vip
+ * @description 服务实现
+ * @date 2023-04-13
+ **/
 @Service
 @RequiredArgsConstructor
 public class TsProductBaseInfoServiceImpl implements TsProductBaseInfoService {
@@ -53,29 +61,29 @@ public class TsProductBaseInfoServiceImpl implements TsProductBaseInfoService {
     private final TsProductBaseInfoMapper tsProductBaseInfoMapper;
 
     @Override
-    public Map<String,Object> queryAll(TsProductBaseInfoQueryCriteria criteria, Pageable pageable){
-        Page<TsProductBaseInfo> page = tsProductBaseInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+    public Map<String, Object> queryAll(TsProductBaseInfoQueryCriteria criteria, Pageable pageable) {
+        Page<TsProductBaseInfo> page = tsProductBaseInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(tsProductBaseInfoMapper::toDto));
     }
 
     @Override
-    public List<TsProductBaseInfoDto> queryAll(TsProductBaseInfoQueryCriteria criteria){
-        return tsProductBaseInfoMapper.toDto(tsProductBaseInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public List<TsProductBaseInfoDto> queryAll(TsProductBaseInfoQueryCriteria criteria) {
+        return tsProductBaseInfoMapper.toDto(tsProductBaseInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     @Transactional
     public TsProductBaseInfoDto findById(Long id) {
         TsProductBaseInfo tsProductBaseInfo = tsProductBaseInfoRepository.findById(id).orElseGet(TsProductBaseInfo::new);
-        ValidationUtil.isNull(tsProductBaseInfo.getId(),"TsProductBaseInfo","id",id);
+        ValidationUtil.isNull(tsProductBaseInfo.getId(), "TsProductBaseInfo", "id", id);
         return tsProductBaseInfoMapper.toDto(tsProductBaseInfo);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsProductBaseInfoDto create(TsProductBaseInfo resources) {
-        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
-        resources.setId(snowflake.nextId()); 
+        resources.setIsDel(false);
+        resources.setCode(ProductCodeUtil.getCode());
         return tsProductBaseInfoMapper.toDto(tsProductBaseInfoRepository.save(resources));
     }
 
@@ -83,7 +91,7 @@ public class TsProductBaseInfoServiceImpl implements TsProductBaseInfoService {
     @Transactional(rollbackFor = Exception.class)
     public void update(TsProductBaseInfo resources) {
         TsProductBaseInfo tsProductBaseInfo = tsProductBaseInfoRepository.findById(resources.getId()).orElseGet(TsProductBaseInfo::new);
-        ValidationUtil.isNull( tsProductBaseInfo.getId(),"TsProductBaseInfo","id",resources.getId());
+        ValidationUtil.isNull(tsProductBaseInfo.getId(), "TsProductBaseInfo", "id", resources.getId());
         tsProductBaseInfo.copy(resources);
         tsProductBaseInfoRepository.save(tsProductBaseInfo);
     }
@@ -99,12 +107,12 @@ public class TsProductBaseInfoServiceImpl implements TsProductBaseInfoService {
     public void download(List<TsProductBaseInfoDto> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (TsProductBaseInfoDto tsProductBaseInfo : all) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("创建人", tsProductBaseInfo.getCreatedBy());
             map.put("创建时间", tsProductBaseInfo.getCreatedTime());
             map.put("更新人", tsProductBaseInfo.getUpdatedBy());
             map.put("更新时间", tsProductBaseInfo.getUpdatedTime());
-            map.put(" isDel",  tsProductBaseInfo.getIsDel());
+            map.put(" isDel", tsProductBaseInfo.getIsDel());
             map.put("商品条码(必填)", tsProductBaseInfo.getCode());
             map.put("商品名称(必填)", tsProductBaseInfo.getName());
             map.put("商品简称(必填)", tsProductBaseInfo.getShortName());
@@ -120,4 +128,5 @@ public class TsProductBaseInfoServiceImpl implements TsProductBaseInfoService {
         }
         FileUtil.downloadExcel(list, response);
     }
+
 }

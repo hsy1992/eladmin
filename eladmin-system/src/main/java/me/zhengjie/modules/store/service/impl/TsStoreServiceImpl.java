@@ -1,22 +1,24 @@
 /*
-*  Copyright 2019-2020 Zheng Jie
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*  http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-*/
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.store.service.impl;
 
 import me.zhengjie.modules.store.domain.TsStore;
+import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,34 +43,35 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
-* @website https://eladmin.vip
-* @description 服务实现
-* @author endless
-* @date 2023-04-13
-**/
+ * @author endless
+ * @website https://eladmin.vip
+ * @description 服务实现
+ * @date 2023-04-13
+ **/
 @Service
 @RequiredArgsConstructor
 public class TsStoreServiceImpl implements TsStoreService {
 
     private final TsStoreRepository tsStoreRepository;
     private final TsStoreMapper tsStoreMapper;
+    private final DeptRepository deptRepository;
 
     @Override
-    public Map<String,Object> queryAll(TsStoreQueryCriteria criteria, Pageable pageable){
-        Page<TsStore> page = tsStoreRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+    public Map<String, Object> queryAll(TsStoreQueryCriteria criteria, Pageable pageable) {
+        Page<TsStore> page = tsStoreRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(tsStoreMapper::toDto));
     }
 
     @Override
-    public List<TsStoreDto> queryAll(TsStoreQueryCriteria criteria){
-        return tsStoreMapper.toDto(tsStoreRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public List<TsStoreDto> queryAll(TsStoreQueryCriteria criteria) {
+        return tsStoreMapper.toDto(tsStoreRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     @Transactional
     public TsStoreDto findById(Long id) {
         TsStore tsStore = tsStoreRepository.findById(id).orElseGet(TsStore::new);
-        ValidationUtil.isNull(tsStore.getId(),"TsStore","id",id);
+        ValidationUtil.isNull(tsStore.getId(), "TsStore", "id", id);
         return tsStoreMapper.toDto(tsStore);
     }
 
@@ -76,6 +79,14 @@ public class TsStoreServiceImpl implements TsStoreService {
     @Transactional(rollbackFor = Exception.class)
     public TsStoreDto create(@Validated TsStore resources) {
         resources.setIsDel(false);
+        // 先创建对应部门
+        Dept dept = new Dept();
+        dept.setSubCount(0);
+        dept.setName(resources.getName());
+        dept.setEnabled(true);
+        dept.setDeptSort(0);
+        dept = deptRepository.save(dept);
+        resources.setDeptId(dept.getId());
         return tsStoreMapper.toDto(tsStoreRepository.save(resources));
     }
 
@@ -83,7 +94,7 @@ public class TsStoreServiceImpl implements TsStoreService {
     @Transactional(rollbackFor = Exception.class)
     public void update(TsStore resources) {
         TsStore tsStore = tsStoreRepository.findById(resources.getId()).orElseGet(TsStore::new);
-        ValidationUtil.isNull( tsStore.getId(),"TsStore","id",resources.getId());
+        ValidationUtil.isNull(tsStore.getId(), "TsStore", "id", resources.getId());
         tsStore.copy(resources);
         tsStoreRepository.save(tsStore);
     }
@@ -99,7 +110,7 @@ public class TsStoreServiceImpl implements TsStoreService {
     public void download(List<TsStoreDto> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (TsStoreDto tsStore : all) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("是否删除;0 删除 1未删除", tsStore.getIsDel());
             map.put("创建人", tsStore.getCreatedBy());
             map.put("创建时间", tsStore.getCreatedTime());

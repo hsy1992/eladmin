@@ -19,6 +19,11 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
@@ -36,18 +41,22 @@ import java.io.Serializable;
 @Table(name="ts_product")
 public class TsProduct implements Serializable {
 
-    @Column(name = "`created_by`")
     @ApiModelProperty(value = "创建人")
+    @CreatedBy
+    @Column(name = "`created_by`", updatable = false)
     private String createdBy;
 
+    @CreationTimestamp
     @Column(name = "`created_time`")
     @ApiModelProperty(value = "创建时间")
     private Timestamp createdTime;
 
+    @LastModifiedBy
     @Column(name = "`updated_by`")
     @ApiModelProperty(value = "更新人")
     private String updatedBy;
 
+    @LastModifiedDate
     @Column(name = "`updated_time`")
     @ApiModelProperty(value = "更新时间")
     private Timestamp updatedTime;
@@ -66,6 +75,7 @@ public class TsProduct implements Serializable {
     @ApiModelProperty(value = "商品图片")
     private String image;
 
+    @NotBlank
     @Column(name = "`name`")
     @ApiModelProperty(value = "商品名称")
     private String name;
@@ -82,9 +92,14 @@ public class TsProduct implements Serializable {
     @ApiModelProperty(value = "关键字")
     private String keyword;
 
+    @NotBlank
     @Column(name = "`cate_id`")
     @ApiModelProperty(value = "分类id")
     private String cateId;
+
+    @Column(name = "`cate_name`")
+    @ApiModelProperty(value = "分类名称")
+    private String cateName;
 
     @Column(name = "`price`")
     @ApiModelProperty(value = "价格")

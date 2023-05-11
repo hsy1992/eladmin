@@ -29,7 +29,7 @@ spring:
     database: ${REDIS_DB:0}
     host: ${REDIS_HOST:39.105.207.170}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PWD:}
+    password: ${REDIS_PWD:haosiyuan1992}
     #连接超时时间
     timeout: 5000
 
