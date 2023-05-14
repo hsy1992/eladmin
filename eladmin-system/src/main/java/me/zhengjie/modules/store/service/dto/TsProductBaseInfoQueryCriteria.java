@@ -26,4 +26,11 @@ import me.zhengjie.annotation.Query;
 **/
 @Data
 public class TsProductBaseInfoQueryCriteria{
+
+    @Query(type = Query.Type.EQUAL)
+    private String cateName;
+
+    @Query(type = Query.Type.INNER_LIKE)
+    private String name;
+
 }

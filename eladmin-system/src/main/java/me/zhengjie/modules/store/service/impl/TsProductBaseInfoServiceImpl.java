@@ -28,6 +28,7 @@ import me.zhengjie.modules.store.service.TsProductBaseInfoService;
 import me.zhengjie.modules.store.service.dto.TsProductBaseInfoDto;
 import me.zhengjie.modules.store.service.dto.TsProductBaseInfoQueryCriteria;
 import me.zhengjie.modules.store.service.mapstruct.TsProductBaseInfoMapper;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.lang.Snowflake;
@@ -41,11 +42,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * @author endless
@@ -127,6 +131,11 @@ public class TsProductBaseInfoServiceImpl implements TsProductBaseInfoService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    public List<TsProductBaseInfoDto> queryAllByName(TsProductBaseInfoQueryCriteria criteria) {
+        return tsProductBaseInfoMapper.toDto(tsProductBaseInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
 }

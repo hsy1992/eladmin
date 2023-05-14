@@ -83,4 +83,5 @@ public interface TsProductBaseInfoService {
     */
     void download(List<TsProductBaseInfoDto> all, HttpServletResponse response) throws IOException;
 
+    List<TsProductBaseInfoDto> queryAllByName(TsProductBaseInfoQueryCriteria criteria);
 }

@@ -65,6 +65,14 @@ public class TsProductBaseInfoController {
         return new ResponseEntity<>(tsProductBaseInfoService.queryAll(criteria, pageable), HttpStatus.OK);
     }
 
+    @PostMapping("/byName")
+    @Log("查询商品信息")
+    @ApiOperation("查询商品信息")
+    @PreAuthorize("@el.check('tsProductBaseInfo:list')")
+    public ResponseEntity<Object> queryTsProductBaseInfoByName(@RequestBody TsProductBaseInfoQueryCriteria criteria) {
+        return new ResponseEntity<>(tsProductBaseInfoService.queryAllByName(criteria), HttpStatus.OK);
+    }
+
     @PostMapping
     @Log("新增商品信息")
     @ApiOperation("新增商品信息")
