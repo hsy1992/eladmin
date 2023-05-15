@@ -72,6 +72,7 @@ public class TsStoreExpressServiceImpl implements TsStoreExpressService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsStoreExpressDto create(TsStoreExpress resources) {
+        resources.setIsDel(false);
         return tsStoreExpressMapper.toDto(tsStoreExpressRepository.save(resources));
     }
 

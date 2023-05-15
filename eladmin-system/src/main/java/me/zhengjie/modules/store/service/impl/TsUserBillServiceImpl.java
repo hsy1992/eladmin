@@ -72,6 +72,7 @@ public class TsUserBillServiceImpl implements TsUserBillService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsUserBillDto create(TsUserBill resources) {
+        resources.setIsDel(false);
         return tsUserBillMapper.toDto(tsUserBillRepository.save(resources));
     }
 

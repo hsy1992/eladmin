@@ -72,6 +72,7 @@ public class TsUserOrderCarInfoServiceImpl implements TsUserOrderCarInfoService 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsUserOrderCarInfoDto create(TsUserOrderCarInfo resources) {
+        resources.setIsDel(false);
         return tsUserOrderCarInfoMapper.toDto(tsUserOrderCarInfoRepository.save(resources));
     }
 

@@ -72,6 +72,7 @@ public class TsStoreOrderServiceImpl implements TsStoreOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsStoreOrderDto create(TsStoreOrder resources) {
+        resources.setIsDel(false);
         return tsStoreOrderMapper.toDto(tsStoreOrderRepository.save(resources));
     }
 

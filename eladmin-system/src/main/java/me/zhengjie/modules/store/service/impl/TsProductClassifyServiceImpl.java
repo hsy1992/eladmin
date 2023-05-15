@@ -72,6 +72,7 @@ public class TsProductClassifyServiceImpl implements TsProductClassifyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsProductClassifyDto create(TsProductClassify resources) {
+        resources.setIsDel(false);
         return tsProductClassifyMapper.toDto(tsProductClassifyRepository.save(resources));
     }
 

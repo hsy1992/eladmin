@@ -33,4 +33,9 @@ public class TsProductQueryCriteria{
 
     private Long deptId;
 
+    @Query(blurry = "name,cateName")
+    private String blurry;
+
+    @Query(type = Query.Type.EQUAL)
+    private String cateId;
 }

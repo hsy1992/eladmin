@@ -72,6 +72,7 @@ public class TsUserServiceImpl implements TsUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsUserDto create(TsUser resources) {
+        resources.setIsDel(false);
         return tsUserMapper.toDto(tsUserRepository.save(resources));
     }
 

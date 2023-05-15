@@ -41,9 +41,9 @@ import java.io.Serializable;
 @Table(name="ts_product")
 public class TsProduct implements Serializable {
 
-    @ApiModelProperty(value = "创建人")
     @CreatedBy
     @Column(name = "`created_by`", updatable = false)
+    @ApiModelProperty(value = "创建人", hidden = true)
     private String createdBy;
 
     @CreationTimestamp

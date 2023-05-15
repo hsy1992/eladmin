@@ -72,6 +72,7 @@ public class TsUserCarServiceImpl implements TsUserCarService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsUserCarDto create(TsUserCar resources) {
+        resources.setIsDel(false);
         return tsUserCarMapper.toDto(tsUserCarRepository.save(resources));
     }
 

@@ -18,6 +18,7 @@ package me.zhengjie.modules.store.service.impl;
 import me.zhengjie.modules.security.config.bean.LoginProperties;
 import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.modules.store.domain.TsProduct;
+import me.zhengjie.modules.store.service.dto.TsProductBaseInfoDto;
 import me.zhengjie.tools.ProductCodeUtil;
 import me.zhengjie.utils.*;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author endless
@@ -81,10 +83,29 @@ public class TsProductServiceImpl implements TsProductService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsProductDto create(TsProduct resources) {
-        resources.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDeptId());
+        resources.setIsDel(false);
+        resources.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
         resources.setSales(0);
         resources.setBarCode(ProductCodeUtil.getCode());
         return tsProductMapper.toDto(tsProductRepository.save(resources));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void createList(List<TsProductBaseInfoDto> resources) {
+        tsProductRepository.saveAll(resources.stream().map(tsProductBaseInfoDto -> {
+            TsProduct product = new TsProduct();
+            product.setName(tsProductBaseInfoDto.getName());
+            product.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
+            product.setSales(0);
+            product.setBarCode(ProductCodeUtil.getCode());
+            product.setIsDel(false);
+            product.setCateId(tsProductBaseInfoDto.getCateId());
+            product.setCateName(tsProductBaseInfoDto.getCateName());
+            product.setPrice(tsProductBaseInfoDto.getSalesPrice());
+            product.setIsShow("1");
+            return product;
+        }).collect(Collectors.toList()));
     }
 
     @Override

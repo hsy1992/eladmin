@@ -72,6 +72,7 @@ public class TsUserAddressServiceImpl implements TsUserAddressService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsUserAddressDto create(TsUserAddress resources) {
+        resources.setIsDel(false);
         return tsUserAddressMapper.toDto(tsUserAddressRepository.save(resources));
     }
 

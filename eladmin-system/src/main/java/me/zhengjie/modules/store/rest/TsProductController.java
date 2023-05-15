@@ -19,6 +19,7 @@ import me.zhengjie.annotation.Log;
 import me.zhengjie.exception.handler.ApiError;
 import me.zhengjie.modules.store.domain.TsProduct;
 import me.zhengjie.modules.store.service.TsProductService;
+import me.zhengjie.modules.store.service.dto.TsProductBaseInfoDto;
 import me.zhengjie.modules.store.service.dto.TsProductQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -70,6 +72,15 @@ public class TsProductController {
             return  new ResponseEntity<>(ApiError.error("请输入售价"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(tsProductService.create(resources), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/insertList")
+    @Log("批量新增商品")
+    @ApiOperation("新增商品")
+    @PreAuthorize("@el.check('tsProduct:add')")
+    public ResponseEntity<Object> createTsProductList(@RequestBody List<TsProductBaseInfoDto> resources) {
+        tsProductService.createList(resources);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping

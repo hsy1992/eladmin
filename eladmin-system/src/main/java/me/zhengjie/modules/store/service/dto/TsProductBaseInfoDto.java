@@ -63,6 +63,9 @@ public class TsProductBaseInfoDto implements Serializable {
     /** 商品类别名称(必填) */
     private String cateName;
 
+    /** 商品类别名称(必填) */
+    private String cateId;
+
     /** 商品品牌名称(必填) */
     private String brandName;
 

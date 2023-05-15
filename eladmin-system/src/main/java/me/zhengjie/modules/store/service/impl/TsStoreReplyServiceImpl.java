@@ -74,6 +74,7 @@ public class TsStoreReplyServiceImpl implements TsStoreReplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TsStoreReplyDto create(TsStoreReply resources) {
+        resources.setIsDel(false);
         return tsStoreReplyMapper.toDto(tsStoreReplyRepository.save(resources));
     }
 

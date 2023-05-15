@@ -16,6 +16,7 @@
 package me.zhengjie.modules.store.service;
 
 import me.zhengjie.modules.store.domain.TsProduct;
+import me.zhengjie.modules.store.service.dto.TsProductBaseInfoDto;
 import me.zhengjie.modules.store.service.dto.TsProductDto;
 import me.zhengjie.modules.store.service.dto.TsProductQueryCriteria;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +61,13 @@ public interface TsProductService {
     * @return TsProductDto
     */
     TsProductDto create(TsProduct resources);
+
+    /**
+     * 创建
+     * @param resources /
+     * @return
+     */
+    void createList(List<TsProductBaseInfoDto> resources);
 
     /**
     * 编辑
