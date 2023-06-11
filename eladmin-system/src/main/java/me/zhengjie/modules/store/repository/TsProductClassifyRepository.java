@@ -25,4 +25,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2023-04-13
 **/
 public interface TsProductClassifyRepository extends JpaRepository<TsProductClassify, Long>, JpaSpecificationExecutor<TsProductClassify> {
+
+
 }

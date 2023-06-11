@@ -46,7 +46,6 @@ public class TsUserAddressController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsUserAddress:list')")
     public void exportTsUserAddress(HttpServletResponse response, TsUserAddressQueryCriteria criteria) throws IOException {
         tsUserAddressService.download(tsUserAddressService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsUserAddressController {
     @GetMapping
     @Log("查询用户地址")
     @ApiOperation("查询用户地址")
-    @PreAuthorize("@el.check('tsUserAddress:list')")
     public ResponseEntity<Object> queryTsUserAddress(TsUserAddressQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsUserAddressService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsUserAddressController {
     @PostMapping
     @Log("新增用户地址")
     @ApiOperation("新增用户地址")
-    @PreAuthorize("@el.check('tsUserAddress:add')")
     public ResponseEntity<Object> createTsUserAddress(@Validated @RequestBody TsUserAddress resources){
         return new ResponseEntity<>(tsUserAddressService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsUserAddressController {
     @PutMapping
     @Log("修改用户地址")
     @ApiOperation("修改用户地址")
-    @PreAuthorize("@el.check('tsUserAddress:edit')")
     public ResponseEntity<Object> updateTsUserAddress(@Validated @RequestBody TsUserAddress resources){
         tsUserAddressService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsUserAddressController {
     @DeleteMapping
     @Log("删除用户地址")
     @ApiOperation("删除用户地址")
-    @PreAuthorize("@el.check('tsUserAddress:del')")
     public ResponseEntity<Object> deleteTsUserAddress(@RequestBody Long[] ids) {
         tsUserAddressService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

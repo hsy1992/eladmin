@@ -46,7 +46,6 @@ public class TsStoreSaleController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsStoreSale:list')")
     public void exportTsStoreSale(HttpServletResponse response, TsStoreSaleQueryCriteria criteria) throws IOException {
         tsStoreSaleService.download(tsStoreSaleService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsStoreSaleController {
     @GetMapping
     @Log("查询店铺销量")
     @ApiOperation("查询店铺销量")
-    @PreAuthorize("@el.check('tsStoreSale:list')")
     public ResponseEntity<Object> queryTsStoreSale(TsStoreSaleQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsStoreSaleService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsStoreSaleController {
     @PostMapping
     @Log("新增店铺销量")
     @ApiOperation("新增店铺销量")
-    @PreAuthorize("@el.check('tsStoreSale:add')")
     public ResponseEntity<Object> createTsStoreSale(@Validated @RequestBody TsStoreSale resources){
         return new ResponseEntity<>(tsStoreSaleService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsStoreSaleController {
     @PutMapping
     @Log("修改店铺销量")
     @ApiOperation("修改店铺销量")
-    @PreAuthorize("@el.check('tsStoreSale:edit')")
     public ResponseEntity<Object> updateTsStoreSale(@Validated @RequestBody TsStoreSale resources){
         tsStoreSaleService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsStoreSaleController {
     @DeleteMapping
     @Log("删除店铺销量")
     @ApiOperation("删除店铺销量")
-    @PreAuthorize("@el.check('tsStoreSale:del')")
     public ResponseEntity<Object> deleteTsStoreSale(@RequestBody Long[] ids) {
         tsStoreSaleService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -16,8 +16,11 @@
 package me.zhengjie.modules.store.repository;
 
 import me.zhengjie.modules.store.domain.TsProduct;
+import me.zhengjie.modules.store.domain.TsProductBaseInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.List;
 
 /**
 * @website https://eladmin.vip
@@ -25,4 +28,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2023-04-13
 **/
 public interface TsProductRepository extends JpaRepository<TsProduct, Long>, JpaSpecificationExecutor<TsProduct> {
+
 }

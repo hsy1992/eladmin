@@ -52,7 +52,6 @@ public class TsProductBaseInfoController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsProductBaseInfo:list')")
     public void exportTsProductBaseInfo(HttpServletResponse response, TsProductBaseInfoQueryCriteria criteria) throws IOException {
         tsProductBaseInfoService.download(tsProductBaseInfoService.queryAll(criteria), response);
     }
@@ -60,7 +59,6 @@ public class TsProductBaseInfoController {
     @GetMapping
     @Log("查询商品信息")
     @ApiOperation("查询商品信息")
-    @PreAuthorize("@el.check('tsProductBaseInfo:list')")
     public ResponseEntity<Object> queryTsProductBaseInfo(TsProductBaseInfoQueryCriteria criteria, Pageable pageable) {
         return new ResponseEntity<>(tsProductBaseInfoService.queryAll(criteria, pageable), HttpStatus.OK);
     }
@@ -68,7 +66,6 @@ public class TsProductBaseInfoController {
     @PostMapping("/byName")
     @Log("查询商品信息")
     @ApiOperation("查询商品信息")
-    @PreAuthorize("@el.check('tsProductBaseInfo:list')")
     public ResponseEntity<Object> queryTsProductBaseInfoByName(@RequestBody TsProductBaseInfoQueryCriteria criteria) {
         return new ResponseEntity<>(tsProductBaseInfoService.queryAllByName(criteria), HttpStatus.OK);
     }
@@ -76,7 +73,6 @@ public class TsProductBaseInfoController {
     @PostMapping
     @Log("新增商品信息")
     @ApiOperation("新增商品信息")
-    @PreAuthorize("@el.check('tsProductBaseInfo:add')")
     public ResponseEntity<Object> createTsProductBaseInfo(@Validated @RequestBody TsProductBaseInfo resources) {
         if (resources.getSalesPrice() == null) {
             return  new ResponseEntity<>(ApiError.error("请输入售价"), HttpStatus.BAD_REQUEST);
@@ -87,7 +83,6 @@ public class TsProductBaseInfoController {
     @PutMapping
     @Log("修改商品信息")
     @ApiOperation("修改商品信息")
-    @PreAuthorize("@el.check('tsProductBaseInfo:edit')")
     public ResponseEntity<Object> updateTsProductBaseInfo(@Validated @RequestBody TsProductBaseInfo resources) {
         tsProductBaseInfoService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -96,7 +91,6 @@ public class TsProductBaseInfoController {
     @DeleteMapping
     @Log("删除商品信息")
     @ApiOperation("删除商品信息")
-    @PreAuthorize("@el.check('tsProductBaseInfo:del')")
     public ResponseEntity<Object> deleteTsProductBaseInfo(@RequestBody Long[] ids) {
         tsProductBaseInfoService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

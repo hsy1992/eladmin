@@ -15,12 +15,12 @@
  */
 package me.zhengjie.modules.store.service.impl;
 
+import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.modules.store.domain.TsStore;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.DeptRepository;
-import me.zhengjie.utils.ValidationUtil;
-import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.store.repository.TsStoreRepository;
 import me.zhengjie.modules.store.service.TsStoreService;
@@ -31,8 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -55,15 +53,22 @@ public class TsStoreServiceImpl implements TsStoreService {
     private final TsStoreRepository tsStoreRepository;
     private final TsStoreMapper tsStoreMapper;
     private final DeptRepository deptRepository;
+    private final UserCacheManager userCacheManager;
 
     @Override
     public Map<String, Object> queryAll(TsStoreQueryCriteria criteria, Pageable pageable) {
+        if (!userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getIsAdmin()) {
+            criteria.setDeptId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
+        }
         Page<TsStore> page = tsStoreRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(tsStoreMapper::toDto));
     }
 
     @Override
     public List<TsStoreDto> queryAll(TsStoreQueryCriteria criteria) {
+        if (!userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getIsAdmin()) {
+            criteria.setDeptId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
+        }
         return tsStoreMapper.toDto(tsStoreRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 

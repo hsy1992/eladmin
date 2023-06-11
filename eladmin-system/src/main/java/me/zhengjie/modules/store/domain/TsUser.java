@@ -19,8 +19,10 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.io.Serializable;
 
@@ -45,6 +47,7 @@ public class TsUser implements Serializable {
     @ApiModelProperty(value = "id")
     private Long id;
 
+    @NotBlank
     @Column(name = "`username`")
     @ApiModelProperty(value = "用户账户")
     private String username;
@@ -81,6 +84,7 @@ public class TsUser implements Serializable {
     @ApiModelProperty(value = "手机号")
     private String phone;
 
+    @CreatedDate
     @Column(name = "`create_time`")
     @ApiModelProperty(value = "添加时间")
     private Timestamp createTime;

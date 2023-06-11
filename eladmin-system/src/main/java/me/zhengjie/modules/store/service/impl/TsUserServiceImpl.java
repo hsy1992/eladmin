@@ -15,6 +15,8 @@
 */
 package me.zhengjie.modules.store.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import me.zhengjie.modules.store.domain.TsUser;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
@@ -73,6 +75,8 @@ public class TsUserServiceImpl implements TsUserService {
     @Transactional(rollbackFor = Exception.class)
     public TsUserDto create(TsUser resources) {
         resources.setIsDel(false);
+        resources.setStatus("1");
+        resources.setCreateTime(DateUtil.date().toTimestamp());
         return tsUserMapper.toDto(tsUserRepository.save(resources));
     }
 

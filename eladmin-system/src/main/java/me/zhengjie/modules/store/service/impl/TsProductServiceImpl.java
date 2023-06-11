@@ -61,14 +61,14 @@ public class TsProductServiceImpl implements TsProductService {
 
     @Override
     public Map<String, Object> queryAll(TsProductQueryCriteria criteria, Pageable pageable) {
-        criteria.setDeptId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
+        criteria.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
         Page<TsProduct> page = tsProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(tsProductMapper::toDto));
     }
 
     @Override
     public List<TsProductDto> queryAll(TsProductQueryCriteria criteria) {
-        criteria.setDeptId(userCacheManager.getUserCache("").getUser().getDeptId());
+        criteria.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
         return tsProductMapper.toDto(tsProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 

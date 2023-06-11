@@ -50,7 +50,6 @@ public class TsProductController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsProduct:list')")
     public void exportTsProduct(HttpServletResponse response, TsProductQueryCriteria criteria) throws IOException {
         tsProductService.download(tsProductService.queryAll(criteria), response);
     }
@@ -58,7 +57,6 @@ public class TsProductController {
     @GetMapping
     @Log("查询商品")
     @ApiOperation("查询商品")
-    @PreAuthorize("@el.check('tsProduct:list')")
     public ResponseEntity<Object> queryTsProduct(TsProductQueryCriteria criteria, Pageable pageable) {
         return new ResponseEntity<>(tsProductService.queryAll(criteria, pageable), HttpStatus.OK);
     }
@@ -66,7 +64,6 @@ public class TsProductController {
     @PostMapping
     @Log("新增商品")
     @ApiOperation("新增商品")
-    @PreAuthorize("@el.check('tsProduct:add')")
     public ResponseEntity<Object> createTsProduct(@Validated @RequestBody TsProduct resources) {
         if (resources.getPrice() == null) {
             return  new ResponseEntity<>(ApiError.error("请输入售价"), HttpStatus.BAD_REQUEST);
@@ -77,7 +74,6 @@ public class TsProductController {
     @PostMapping("/insertList")
     @Log("批量新增商品")
     @ApiOperation("新增商品")
-    @PreAuthorize("@el.check('tsProduct:add')")
     public ResponseEntity<Object> createTsProductList(@RequestBody List<TsProductBaseInfoDto> resources) {
         tsProductService.createList(resources);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -86,7 +82,6 @@ public class TsProductController {
     @PutMapping
     @Log("修改商品")
     @ApiOperation("修改商品")
-    @PreAuthorize("@el.check('tsProduct:edit')")
     public ResponseEntity<Object> updateTsProduct(@Validated @RequestBody TsProduct resources) {
         tsProductService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -95,7 +90,6 @@ public class TsProductController {
     @DeleteMapping
     @Log("删除商品")
     @ApiOperation("删除商品")
-    @PreAuthorize("@el.check('tsProduct:del')")
     public ResponseEntity<Object> deleteTsProduct(@RequestBody Long[] ids) {
         tsProductService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

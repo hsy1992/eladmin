@@ -46,7 +46,6 @@ public class TsProductClassifyController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsProductClassify:list')")
     public void exportTsProductClassify(HttpServletResponse response, TsProductClassifyQueryCriteria criteria) throws IOException {
         tsProductClassifyService.download(tsProductClassifyService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsProductClassifyController {
     @Log("查询全部分类")
     @ApiOperation("查询全部分类")
     @GetMapping(value = "/list")
-    @PreAuthorize("@el.check('tsProductClassify:list')")
     public ResponseEntity<Object> getProductClassifyList(TsProductClassifyQueryCriteria criteria) {
         return new ResponseEntity<>(tsProductClassifyService.queryAll(criteria), HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsProductClassifyController {
     @GetMapping
     @Log("查询分类配置")
     @ApiOperation("查询分类配置")
-    @PreAuthorize("@el.check('tsProductClassify:list')")
     public ResponseEntity<Object> queryTsProductClassify(TsProductClassifyQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsProductClassifyService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -70,7 +67,6 @@ public class TsProductClassifyController {
     @PostMapping
     @Log("新增分类配置")
     @ApiOperation("新增分类配置")
-    @PreAuthorize("@el.check('tsProductClassify:add')")
     public ResponseEntity<Object> createTsProductClassify(@Validated @RequestBody TsProductClassify resources){
         return new ResponseEntity<>(tsProductClassifyService.create(resources),HttpStatus.CREATED);
     }
@@ -78,7 +74,6 @@ public class TsProductClassifyController {
     @PutMapping
     @Log("修改分类配置")
     @ApiOperation("修改分类配置")
-    @PreAuthorize("@el.check('tsProductClassify:edit')")
     public ResponseEntity<Object> updateTsProductClassify(@Validated @RequestBody TsProductClassify resources){
         tsProductClassifyService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -87,7 +82,6 @@ public class TsProductClassifyController {
     @DeleteMapping
     @Log("删除分类配置")
     @ApiOperation("删除分类配置")
-    @PreAuthorize("@el.check('tsProductClassify:del')")
     public ResponseEntity<Object> deleteTsProductClassify(@RequestBody Long[] ids) {
         tsProductClassifyService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

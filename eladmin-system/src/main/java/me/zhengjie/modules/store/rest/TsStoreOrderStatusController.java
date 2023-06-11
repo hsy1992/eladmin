@@ -46,7 +46,6 @@ public class TsStoreOrderStatusController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsStoreOrderStatus:list')")
     public void exportTsStoreOrderStatus(HttpServletResponse response, TsStoreOrderStatusQueryCriteria criteria) throws IOException {
         tsStoreOrderStatusService.download(tsStoreOrderStatusService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsStoreOrderStatusController {
     @GetMapping
     @Log("查询订单操作记录")
     @ApiOperation("查询订单操作记录")
-    @PreAuthorize("@el.check('tsStoreOrderStatus:list')")
     public ResponseEntity<Object> queryTsStoreOrderStatus(TsStoreOrderStatusQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsStoreOrderStatusService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsStoreOrderStatusController {
     @PostMapping
     @Log("新增订单操作记录")
     @ApiOperation("新增订单操作记录")
-    @PreAuthorize("@el.check('tsStoreOrderStatus:add')")
     public ResponseEntity<Object> createTsStoreOrderStatus(@Validated @RequestBody TsStoreOrderStatus resources){
         return new ResponseEntity<>(tsStoreOrderStatusService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsStoreOrderStatusController {
     @PutMapping
     @Log("修改订单操作记录")
     @ApiOperation("修改订单操作记录")
-    @PreAuthorize("@el.check('tsStoreOrderStatus:edit')")
     public ResponseEntity<Object> updateTsStoreOrderStatus(@Validated @RequestBody TsStoreOrderStatus resources){
         tsStoreOrderStatusService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsStoreOrderStatusController {
     @DeleteMapping
     @Log("删除订单操作记录")
     @ApiOperation("删除订单操作记录")
-    @PreAuthorize("@el.check('tsStoreOrderStatus:del')")
     public ResponseEntity<Object> deleteTsStoreOrderStatus(@RequestBody Long[] ids) {
         tsStoreOrderStatusService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

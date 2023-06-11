@@ -46,7 +46,6 @@ public class TsStoreExpressController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsStoreExpress:list')")
     public void exportTsStoreExpress(HttpServletResponse response, TsStoreExpressQueryCriteria criteria) throws IOException {
         tsStoreExpressService.download(tsStoreExpressService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsStoreExpressController {
     @GetMapping
     @Log("查询运费配置")
     @ApiOperation("查询运费配置")
-    @PreAuthorize("@el.check('tsStoreExpress:list')")
     public ResponseEntity<Object> queryTsStoreExpress(TsStoreExpressQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsStoreExpressService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsStoreExpressController {
     @PostMapping
     @Log("新增运费配置")
     @ApiOperation("新增运费配置")
-    @PreAuthorize("@el.check('tsStoreExpress:add')")
     public ResponseEntity<Object> createTsStoreExpress(@Validated @RequestBody TsStoreExpress resources){
         return new ResponseEntity<>(tsStoreExpressService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsStoreExpressController {
     @PutMapping
     @Log("修改运费配置")
     @ApiOperation("修改运费配置")
-    @PreAuthorize("@el.check('tsStoreExpress:edit')")
     public ResponseEntity<Object> updateTsStoreExpress(@Validated @RequestBody TsStoreExpress resources){
         tsStoreExpressService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsStoreExpressController {
     @DeleteMapping
     @Log("删除运费配置")
     @ApiOperation("删除运费配置")
-    @PreAuthorize("@el.check('tsStoreExpress:del')")
     public ResponseEntity<Object> deleteTsStoreExpress(@RequestBody Long[] ids) {
         tsStoreExpressService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

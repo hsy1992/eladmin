@@ -19,10 +19,13 @@ import me.zhengjie.modules.store.domain.TsProductBaseInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 /**
 * @website https://eladmin.vip
 * @author endless
 * @date 2023-04-13
 **/
 public interface TsProductBaseInfoRepository extends JpaRepository<TsProductBaseInfo, Long>, JpaSpecificationExecutor<TsProductBaseInfo> {
+
 }

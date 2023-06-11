@@ -46,7 +46,6 @@ public class TsUserCarController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsUserCar:list')")
     public void exportTsUserCar(HttpServletResponse response, TsUserCarQueryCriteria criteria) throws IOException {
         tsUserCarService.download(tsUserCarService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsUserCarController {
     @GetMapping
     @Log("查询购物车")
     @ApiOperation("查询购物车")
-    @PreAuthorize("@el.check('tsUserCar:list')")
     public ResponseEntity<Object> queryTsUserCar(TsUserCarQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsUserCarService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsUserCarController {
     @PostMapping
     @Log("新增购物车")
     @ApiOperation("新增购物车")
-    @PreAuthorize("@el.check('tsUserCar:add')")
     public ResponseEntity<Object> createTsUserCar(@Validated @RequestBody TsUserCar resources){
         return new ResponseEntity<>(tsUserCarService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsUserCarController {
     @PutMapping
     @Log("修改购物车")
     @ApiOperation("修改购物车")
-    @PreAuthorize("@el.check('tsUserCar:edit')")
     public ResponseEntity<Object> updateTsUserCar(@Validated @RequestBody TsUserCar resources){
         tsUserCarService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsUserCarController {
     @DeleteMapping
     @Log("删除购物车")
     @ApiOperation("删除购物车")
-    @PreAuthorize("@el.check('tsUserCar:del')")
     public ResponseEntity<Object> deleteTsUserCar(@RequestBody Long[] ids) {
         tsUserCarService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

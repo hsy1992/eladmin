@@ -26,4 +26,7 @@ import me.zhengjie.annotation.Query;
 **/
 @Data
 public class TsStoreOrderQueryCriteria{
+
+    @Query(type = Query.Type.EQUAL)
+    private Long storeId;
 }

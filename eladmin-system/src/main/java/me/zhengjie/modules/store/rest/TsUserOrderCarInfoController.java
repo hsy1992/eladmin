@@ -46,7 +46,6 @@ public class TsUserOrderCarInfoController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsUserOrderCarInfo:list')")
     public void exportTsUserOrderCarInfo(HttpServletResponse response, TsUserOrderCarInfoQueryCriteria criteria) throws IOException {
         tsUserOrderCarInfoService.download(tsUserOrderCarInfoService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsUserOrderCarInfoController {
     @GetMapping
     @Log("查询购物车")
     @ApiOperation("查询购物车")
-    @PreAuthorize("@el.check('tsUserOrderCarInfo:list')")
     public ResponseEntity<Object> queryTsUserOrderCarInfo(TsUserOrderCarInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsUserOrderCarInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsUserOrderCarInfoController {
     @PostMapping
     @Log("新增购物车")
     @ApiOperation("新增购物车")
-    @PreAuthorize("@el.check('tsUserOrderCarInfo:add')")
     public ResponseEntity<Object> createTsUserOrderCarInfo(@Validated @RequestBody TsUserOrderCarInfo resources){
         return new ResponseEntity<>(tsUserOrderCarInfoService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsUserOrderCarInfoController {
     @PutMapping
     @Log("修改购物车")
     @ApiOperation("修改购物车")
-    @PreAuthorize("@el.check('tsUserOrderCarInfo:edit')")
     public ResponseEntity<Object> updateTsUserOrderCarInfo(@Validated @RequestBody TsUserOrderCarInfo resources){
         tsUserOrderCarInfoService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsUserOrderCarInfoController {
     @DeleteMapping
     @Log("删除购物车")
     @ApiOperation("删除购物车")
-    @PreAuthorize("@el.check('tsUserOrderCarInfo:del')")
     public ResponseEntity<Object> deleteTsUserOrderCarInfo(@RequestBody Long[] ids) {
         tsUserOrderCarInfoService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

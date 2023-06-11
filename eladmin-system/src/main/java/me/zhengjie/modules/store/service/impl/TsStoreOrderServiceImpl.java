@@ -15,9 +15,9 @@
 */
 package me.zhengjie.modules.store.service.impl;
 
+import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.modules.store.domain.TsStoreOrder;
-import me.zhengjie.utils.ValidationUtil;
-import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.*;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.store.repository.TsStoreOrderRepository;
 import me.zhengjie.modules.store.service.TsStoreOrderService;
@@ -28,8 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -49,15 +48,22 @@ public class TsStoreOrderServiceImpl implements TsStoreOrderService {
 
     private final TsStoreOrderRepository tsStoreOrderRepository;
     private final TsStoreOrderMapper tsStoreOrderMapper;
+    private final UserCacheManager userCacheManager;
 
     @Override
     public Map<String,Object> queryAll(TsStoreOrderQueryCriteria criteria, Pageable pageable){
+        if (!userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getIsAdmin()) {
+            criteria.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
+        }
         Page<TsStoreOrder> page = tsStoreOrderRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(tsStoreOrderMapper::toDto));
     }
 
     @Override
     public List<TsStoreOrderDto> queryAll(TsStoreOrderQueryCriteria criteria){
+        if (!userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getIsAdmin()) {
+            criteria.setStoreId(userCacheManager.getUserCache(SecurityUtils.getCurrentUser().getUsername()).getUser().getDept().getId());
+        }
         return tsStoreOrderMapper.toDto(tsStoreOrderRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 

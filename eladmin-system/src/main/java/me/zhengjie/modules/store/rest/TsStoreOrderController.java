@@ -46,7 +46,6 @@ public class TsStoreOrderController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsStoreOrder:list')")
     public void exportTsStoreOrder(HttpServletResponse response, TsStoreOrderQueryCriteria criteria) throws IOException {
         tsStoreOrderService.download(tsStoreOrderService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsStoreOrderController {
     @GetMapping
     @Log("查询订单")
     @ApiOperation("查询订单")
-    @PreAuthorize("@el.check('tsStoreOrder:list')")
     public ResponseEntity<Object> queryTsStoreOrder(TsStoreOrderQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsStoreOrderService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsStoreOrderController {
     @PostMapping
     @Log("新增订单")
     @ApiOperation("新增订单")
-    @PreAuthorize("@el.check('tsStoreOrder:add')")
     public ResponseEntity<Object> createTsStoreOrder(@Validated @RequestBody TsStoreOrder resources){
         return new ResponseEntity<>(tsStoreOrderService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsStoreOrderController {
     @PutMapping
     @Log("修改订单")
     @ApiOperation("修改订单")
-    @PreAuthorize("@el.check('tsStoreOrder:edit')")
     public ResponseEntity<Object> updateTsStoreOrder(@Validated @RequestBody TsStoreOrder resources){
         tsStoreOrderService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsStoreOrderController {
     @DeleteMapping
     @Log("删除订单")
     @ApiOperation("删除订单")
-    @PreAuthorize("@el.check('tsStoreOrder:del')")
     public ResponseEntity<Object> deleteTsStoreOrder(@RequestBody Long[] ids) {
         tsStoreOrderService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

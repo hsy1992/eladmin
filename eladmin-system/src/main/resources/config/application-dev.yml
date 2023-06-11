@@ -8,11 +8,11 @@ spring:
       username: ${DB_USER:root}
       password: ${DB_PWD:YIcangkeji@2023}
       # 初始连接数
-      initial-size: 5
+      initial-size: 10
       # 最小连接数
-      min-idle: 15
+      min-idle: 20
       # 最大连接数
-      max-active: 30
+      max-active: 50
       # 超时时间(以秒数为单位)
       remove-abandoned-timeout: 180
       # 获取连接超时时间

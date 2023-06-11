@@ -26,4 +26,7 @@ import me.zhengjie.annotation.Query;
 **/
 @Data
 public class TsStoreQueryCriteria{
+
+    @Query(type = Query.Type.EQUAL)
+    private Long deptId;
 }

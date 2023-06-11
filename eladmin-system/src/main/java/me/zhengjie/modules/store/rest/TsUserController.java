@@ -46,7 +46,6 @@ public class TsUserController {
     @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check('tsUser:list')")
     public void exportTsUser(HttpServletResponse response, TsUserQueryCriteria criteria) throws IOException {
         tsUserService.download(tsUserService.queryAll(criteria), response);
     }
@@ -54,7 +53,6 @@ public class TsUserController {
     @GetMapping
     @Log("查询用户表")
     @ApiOperation("查询用户表")
-    @PreAuthorize("@el.check('tsUser:list')")
     public ResponseEntity<Object> queryTsUser(TsUserQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(tsUserService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -62,7 +60,6 @@ public class TsUserController {
     @PostMapping
     @Log("新增用户表")
     @ApiOperation("新增用户表")
-    @PreAuthorize("@el.check('tsUser:add')")
     public ResponseEntity<Object> createTsUser(@Validated @RequestBody TsUser resources){
         return new ResponseEntity<>(tsUserService.create(resources),HttpStatus.CREATED);
     }
@@ -70,7 +67,6 @@ public class TsUserController {
     @PutMapping
     @Log("修改用户表")
     @ApiOperation("修改用户表")
-    @PreAuthorize("@el.check('tsUser:edit')")
     public ResponseEntity<Object> updateTsUser(@Validated @RequestBody TsUser resources){
         tsUserService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,7 +75,6 @@ public class TsUserController {
     @DeleteMapping
     @Log("删除用户表")
     @ApiOperation("删除用户表")
-    @PreAuthorize("@el.check('tsUser:del')")
     public ResponseEntity<Object> deleteTsUser(@RequestBody Long[] ids) {
         tsUserService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
