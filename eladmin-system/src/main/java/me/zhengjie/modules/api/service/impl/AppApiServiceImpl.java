@@ -7,10 +7,7 @@ import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.modules.api.domain.AppResultBean;
-import me.zhengjie.modules.api.domain.AppStoreProductDTO;
-import me.zhengjie.modules.api.domain.AppUserQueryCriteria;
-import me.zhengjie.modules.api.domain.StoreInfoDTO;
+import me.zhengjie.modules.api.domain.*;
 import me.zhengjie.modules.api.service.AppApiService;
 import me.zhengjie.modules.api.service.dto.AppProductQueryCriteria;
 import me.zhengjie.modules.api.service.dto.HomeStoreDTO;
@@ -19,6 +16,9 @@ import me.zhengjie.modules.store.domain.*;
 import me.zhengjie.modules.store.repository.*;
 import me.zhengjie.modules.store.service.TsUserService;
 import me.zhengjie.modules.store.service.dto.TsStoreExpressDto;
+import me.zhengjie.modules.store.service.dto.TsUserAddressDto;
+import me.zhengjie.modules.store.service.mapstruct.TsProductBaseInfoMapper;
+import me.zhengjie.modules.store.service.mapstruct.TsUserAddressMapper;
 import me.zhengjie.tools.GpsUtil;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.QueryHelp;
@@ -28,10 +28,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +48,8 @@ public class AppApiServiceImpl implements AppApiService {
     private final TsProductClassifyRepository tsProductClassifyRepository;
     private final TsProductRepository tsProductRepository;
     private final TsStoreExpressRepository tsStoreExpressRepository;
+    private final TsUserAddressRepository tsUserAddressRepository;
+    private final TsUserAddressMapper tsUserAddressMapper;
     private final String wxApi = "https://api.weixin.qq.com/sns/jscode2session?appid=wx576896069e68458e&secret=527e969d9d76f86188c0f38b7d3ebac2&js_code=%s&grant_type=authorization_code";
 
     @Override
@@ -58,11 +63,14 @@ public class AppApiServiceImpl implements AppApiService {
         AppUserQueryCriteria criteria = new AppUserQueryCriteria();
         criteria.setUsername(tsUser.getUsername());
         Optional<TsUser> appUser = tsUserRepository.findOne((Specification<TsUser>) (root, query, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
+        long userId = 0L;
         if (!appUser.isPresent()) {
             log.info("创建用户:" + tsUser);
-            tsUserService.create(tsUser);
+            userId = tsUserService.create(tsUser).getId();
+        } else {
+            userId = appUser.get().getId();
         }
-        return AppResultBean.ok(null, "登录成功");
+        return AppResultBean.ok(userId, "登录成功");
     }
 
     @Override
@@ -133,5 +141,57 @@ public class AppApiServiceImpl implements AppApiService {
         appProductQueryCriteria.setStoreId(request.getDeptId());
         Optional<TsStoreExpress> dto = tsStoreExpressRepository.findOne((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, appProductQueryCriteria, criteriaBuilder));
         return AppResultBean.ok(dto.orElse(null));
+    }
+
+    /**
+     * 查询用户地址
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public AppResultBean<List<TsUserAddressDto>> queryAddressByUser(AppUserIdQuery request) {
+        List<TsUserAddress> list = tsUserAddressRepository.findAll((Specification<TsUserAddress>) (root, query, criteriaBuilder) -> QueryHelp.getPredicate(root, request, criteriaBuilder));
+        return AppResultBean.ok(tsUserAddressMapper.toDto(list));
+    }
+
+    @Override
+    public AppResultBean<TsUserAddressDto> queryAddressById(AppAddressIdQuery request) {
+        Optional<TsUserAddress> data = tsUserAddressRepository.findOne((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, request, criteriaBuilder));
+        return AppResultBean.ok(tsUserAddressMapper.toDto(data.orElse(null)));
+    }
+
+    @Override
+    public AppResultBean<Object> saveAddress(TsUserAddressDto request) {
+        request.setIsDefault(false);
+        request.setIsDel(false);
+        tsUserAddressRepository.save(tsUserAddressMapper.toEntity(request));
+        return AppResultBean.ok(null);
+    }
+
+    @Override
+    public AppResultBean<Object> updateAddress(TsUserAddressDto request) {
+        tsUserAddressRepository.saveAndFlush(tsUserAddressMapper.toEntity(request));
+        return AppResultBean.ok(null);
+    }
+
+    @Override
+    public AppResultBean<Object> setDefaultAddress(AppAddressIdQuery request) {
+        tsUserAddressRepository.setDefaultAddress(request.getUid());
+        tsUserAddressRepository.setDefaultAddressTrue(request.getId());
+        return AppResultBean.ok(null);
+    }
+
+    @Override
+    public AppResultBean<TsUserAddress> queryDefaultAddress(AppUserIdQuery request) {
+        List<TsUserAddress> list = tsUserAddressRepository.findAll((Specification<TsUserAddress>) (root, query, criteriaBuilder) -> QueryHelp.getPredicate(root, request, criteriaBuilder))
+                .stream()
+                .sorted(Comparator.comparing(TsUserAddress::getIsDefault).reversed())
+                .collect(Collectors.toList());
+        if (list.isEmpty()) {
+            return AppResultBean.ok(null);
+        } else  {
+            return AppResultBean.ok(list.get(0));
+        }
     }
 }
