@@ -1,13 +1,15 @@
 package me.zhengjie.modules.api.rest;
 
+import com.wechat.pay.java.core.notification.NotificationConfig;
+import com.wechat.pay.java.core.notification.NotificationParser;
+import com.wechat.pay.java.core.notification.RequestParam;
+import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.annotation.rest.AnonymousPostMapping;
-import me.zhengjie.modules.api.domain.AppAddressIdQuery;
-import me.zhengjie.modules.api.domain.AppResultBean;
-import me.zhengjie.modules.api.domain.AppUserIdQuery;
+import me.zhengjie.modules.api.domain.*;
 import me.zhengjie.modules.api.service.AppApiService;
 import me.zhengjie.modules.api.service.dto.HomeStoreRequest;
 import me.zhengjie.modules.api.service.dto.ProductListByStoreRequest;
@@ -15,6 +17,7 @@ import me.zhengjie.modules.store.domain.TsUser;
 import me.zhengjie.modules.store.service.TsProductClassifyService;
 import me.zhengjie.modules.store.service.dto.TsProductClassifyQueryCriteria;
 import me.zhengjie.modules.store.service.dto.TsUserAddressDto;
+import me.zhengjie.tools.PayTool;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -99,5 +102,57 @@ public class AppApiController {
     @ApiOperation("设置默认地址")
     public ResponseEntity<Object> setDefaultAddress(@RequestBody AppAddressIdQuery request) {
         return new ResponseEntity<>(appService.setDefaultAddress(request), HttpStatus.OK);
+    }
+
+    @AnonymousPostMapping("/order/submit")
+    @Log("提交订单")
+    @ApiOperation("提交订单")
+    public ResponseEntity<Object> submitOrder(@RequestBody AppOrderDto request) {
+        return new ResponseEntity<>(appService.submitOrder(request), HttpStatus.OK);
+    }
+
+    @AnonymousPostMapping("/order/list")
+    @Log("订单列表")
+    @ApiOperation("订单列表")
+    public ResponseEntity<Object> orderList(@RequestBody AppOrderListRequest request) {
+        return new ResponseEntity<>(appService.orderList(request), HttpStatus.OK);
+    }
+
+    @AnonymousPostMapping("/order/details")
+    @Log("订单详情")
+    @ApiOperation("订单详情")
+    public ResponseEntity<Object> orderDetails(@RequestBody AppOrderListRequest request) {
+        return new ResponseEntity<>(appService.orderDetails(request), HttpStatus.OK);
+    }
+
+    @AnonymousPostMapping("/order/pay")
+    @Log("订单支付")
+    @ApiOperation("订单支付")
+    public ResponseEntity<Object> orderPay(@RequestBody AppOrderListRequest request) {
+        return new ResponseEntity<>(appService.orderPay(request), HttpStatus.OK);
+    }
+
+    @AnonymousPostMapping("/order/cancel")
+    @Log("取消订单")
+    @ApiOperation("取消订单")
+    public ResponseEntity<Object> orderCancel(@RequestBody AppOrderListRequest request) {
+        request.setStatus(4);
+        return new ResponseEntity<>(appService.orderEditStatus(request), HttpStatus.OK);
+    }
+
+    @AnonymousPostMapping("/order/confirm")
+    @Log("确认收货")
+    @ApiOperation("确认收货")
+    public ResponseEntity<Object> orderConfirm(@RequestBody AppOrderListRequest request) {
+        request.setStatus(3);
+        return new ResponseEntity<>(appService.orderEditStatus(request), HttpStatus.OK);
+    }
+
+
+    @AnonymousPostMapping("/result")
+    @Log("支付通知")
+    @ApiOperation("支付通知")
+    public ResponseEntity<Object> payResult(@RequestBody RequestParam requestParam) {
+        return new ResponseEntity<>(appService.payResult(requestParam), HttpStatus.OK);
     }
 }

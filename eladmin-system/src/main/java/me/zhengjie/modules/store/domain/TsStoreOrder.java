@@ -104,7 +104,7 @@ public class TsStoreOrder implements Serializable {
 
     @Column(name = "`status`",nullable = false)
     @NotNull
-    @ApiModelProperty(value = "-1申请退款 -2 退款成功 0 待发货 1待收货 2 已收货 3已完成")
+    @ApiModelProperty(value = "-1申请退款 -2 退款成功 0 待支付 1待收货 2 已收货 3已完成 4已取消")
     private Integer status;
 
     @Column(name = "`remark`")

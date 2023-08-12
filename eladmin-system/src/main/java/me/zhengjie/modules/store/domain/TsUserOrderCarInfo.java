@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.io.Serializable;
 
@@ -68,6 +69,14 @@ public class TsUserOrderCarInfo implements Serializable {
     @Column(name = "`product_num`")
     @ApiModelProperty(value = "商品数量")
     private Integer productNum;
+
+    @Column(name = "`product_price`")
+    @ApiModelProperty(value = "商品价格")
+    private BigDecimal productPrice;
+
+    @Column(name = "`product_name`")
+    @ApiModelProperty(value = "商品名称")
+    private String name;
 
     @Column(name = "`is_del`")
     @ApiModelProperty(value = "isDel")

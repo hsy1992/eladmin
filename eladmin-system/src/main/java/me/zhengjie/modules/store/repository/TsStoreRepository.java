@@ -25,4 +25,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2023-04-13
 **/
 public interface TsStoreRepository extends JpaRepository<TsStore, Long>, JpaSpecificationExecutor<TsStore> {
+
+    TsStore findByDeptId(Long id);
 }
